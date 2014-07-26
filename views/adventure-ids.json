@@ -1,0 +1,9 @@
+{
+   "_id": "_design/adventureids",
+   "language": "javascript",
+   "views": {
+       "all": {
+           "map": "function(doc) { emit(null, doc.title) }"
+       }
+   }
+}
