@@ -55,6 +55,12 @@ var Adventure;
 		self.pageText = ko.observable(page.pageText);
         self.choices = ko.observableArray([]);
         
+        self.hasTextInput = ko.computed(function() {
+    		return $.grep(self.choices(), function(choice) {
+				return choice.input();
+    		}).length > 0; 
+    	});
+    	
         if (page.choices && page.choices.length > 0) {
             $.each(page.choices, function (i, choice) {
                 self.choices.push(new Adventure.Choice(choice));
@@ -79,6 +85,7 @@ var Adventure;
         self.nextPage = ko.observable(choice.nextPage); //id of linked page
         self.isSecret = ko.observable(choice.isSecret); //whether or not the choice is visible if requirements are not met (if false, the player can see the requirements that they did not meet).
 		self.input = ko.observable(choice.input || false);
+		self.inputAliases = ko.observable('');
         self.requirements = ko.observableArray([]); //all of these must be true for the choice to be activated
 		self.commands = ko.observableArray([]); //commands to be performed if the user clicked on this choice. This is the only way the story variables can be changed.
 		

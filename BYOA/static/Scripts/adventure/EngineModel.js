@@ -23,6 +23,7 @@ var Adventure;
       self.canStepBack(self.story().canStepBack() && self.history().length > 0);
     });
     
+	self.userInput = ko.observable();
     self.canEdit = ko.observable(false);
     self.editAdvanced = ko.observable(false);
     self.showPageTree = ko.observable(false); //use this to control visibility of pageTree
@@ -180,6 +181,24 @@ var Adventure;
       }
     };
     
+	self.choosePageMatchingInput = function() {
+		var matchingChoice = $.grep(self.currentPage().choices(), function(choice) {
+			var trimput = self.userInput().trim().toLowerCase();
+			var optionArray = choice.inputAliases().split(',');
+			optionArray.push(choice.caption());
+			$.each(optionArray, function(i, val) {
+				optionArray[i] = val.trim().toLowerCase();
+			});
+			return choice.input() && $.inArray(trimput, optionArray) >= 0;
+		});
+		if(matchingChoice.length == 1) {
+			self.choose(matchingChoice[0]);
+		}
+		else {
+			$('.choice-invalid').fadeIn().delay(3500).fadeOut('slow');
+		}
+	};
+		
     self.newChoice = function() {
       self.currentPage().createNewChoice(self.story().createNewPage('(Edit Me)'), 'Edit Me');
       $('.choicetext:last').click(); //focus on the newly created choice, which is added to the end. 
